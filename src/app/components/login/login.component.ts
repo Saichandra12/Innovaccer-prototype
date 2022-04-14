@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
     await this.firestore
       .collection('registered-users-data')
       .stateChanges()
-      .subscribe((data) => {
+      .subscribe(async (data) => {
         if (data && data.length > 0) {
           data.forEach((data) => {
             const userDb: any = data.payload.doc.data();
@@ -83,13 +83,14 @@ export class LoginComponent implements OnInit {
               userDb.userEmail == userData.userEmail &&
               userDb.password == userData.password
             ) {
-              this.toastr.success('Successful', 'Login');
-              localStorage.setItem('login', 'success');
-              localStorage.setItem('email', userData.userEmail);
-              window.location.reload();
             }
           });
-          console.log('Login Unsuccess');
+          this.toastr.success('Successful', 'Login');
+          await this.delay(2000);
+          localStorage.setItem('login', 'success');
+          localStorage.setItem('email', userData.userEmail);
+          window.location.reload();
+          //console.log('Login Unsuccess');
           //sub.next({isSuccessful: true, phoneData: contacts, reason: null});
         } else {
           console.log('No data');
@@ -109,6 +110,9 @@ export class LoginComponent implements OnInit {
     window.location.reload();
   }
 
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   logout(): void {
     window.localStorage.clear();
     window.location.reload();

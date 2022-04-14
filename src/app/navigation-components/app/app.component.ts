@@ -22,9 +22,13 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = true;
     }
   }
-  logOut(): void {
+  async logOut(): Promise<void> {
     window.localStorage.clear();
     this.router.navigate(['/home']);
+    await this.delay(500);
     window.location.reload();
+  }
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
